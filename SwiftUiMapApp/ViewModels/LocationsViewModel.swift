@@ -6,3 +6,17 @@
 //
 
 import Foundation
+import MapKit
+
+class LocationsViewModel: ObservableObject{
+
+    @Published var locations: [Location]
+    
+    init(){
+        self.locations = LocationsDataService.locations
+    }
+    
+    
+   
+        
+}

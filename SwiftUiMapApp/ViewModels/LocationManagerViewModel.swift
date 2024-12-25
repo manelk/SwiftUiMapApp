@@ -8,11 +8,13 @@
 import Foundation
 import CoreLocation
 
-final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
+final class LocationManagerViewModel: NSObject, CLLocationManagerDelegate, ObservableObject {
     
+    //used to store the user location
     @Published var lastKnownLocation: CLLocationCoordinate2D?
-    var manager = CLLocationManager()
     
+    // will allow get access to location services.
+    var manager = CLLocationManager()
     
     func checkLocationAuthorization() {
         
@@ -38,11 +40,14 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
             
         @unknown default:
             print("Location service disabled")
-        
+            
         }
     }
     
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {//Trigged every time authorization status changes
+    //Trigged every time authorization status changes : came from the protocol CLLocationManagerDelegate
+    // https://developer.apple.com/documentation/corelocation/cllocationmanagerdelegate
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        print("Authorization status changes")
         checkLocationAuthorization()
     }
     

@@ -14,15 +14,21 @@ struct CircleImage: View {
 
     var body: some View {
         image
+            .resizable()
+            
+            .aspectRatio(contentMode: .fit)
             .clipShape(Circle())
             .overlay {
                 Circle().stroke(.white, lineWidth: 4)
             }
             .shadow(radius: 7)
+            .padding(20)
+        
+
     }
 }
 
 
 #Preview {
-    CircleImage()
+    CircleImage(image: Image("paris-eiffeltower-1"))
 }

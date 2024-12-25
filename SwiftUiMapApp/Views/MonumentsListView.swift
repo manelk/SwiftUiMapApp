@@ -6,12 +6,37 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct MonumentsListView: View {
+    
+    @StateObject var locationsViewModel = LocationsViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            List{
+                ForEach(locationsViewModel.locations){ data in
+                    HStack{
+                        
+                        Image(data.imageNames[0])
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(20)
+                        
+                        VStack(alignment: .leading){
+                            Text(data.cityName)
+                            Text(data.name)
+                                .font(. system(size: 24))
+                                .fontWeight(.bold)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
 
 #Preview {
     MonumentsListView()

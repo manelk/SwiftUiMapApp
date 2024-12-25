@@ -7,36 +7,21 @@
 
 import SwiftUI
 import MapKit
+import Photos
 
-// ---------- THE VIEW
 struct LocationsView: View {
-    // creation of a LocationsViewModel instance called vm
-    // this instance is of type @StateObject
-    // We use @StateObject to create and own a persistent instance of the view model in a View, ensuring it updates the UI when its @Published properties change.
-    // @StateObject private var vm = LocationsViewModel()
-    
-    // we reference the EnvironmentObject already created
     @EnvironmentObject private var vm: LocationsViewModel
+    @StateObject private var locationManager = LocationManagerViewModel()
     
+    @State private var centerVar: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     
     @State private var cameraPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude:41.8902, longitude: 12.4922),
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     ))
     
-
-    
     var body: some View {
-        //         code to see the vm.locations
-        Text("Hey")
-            .onAppear {
-                print("VM", vm.locations)
-            }
-        //        List{
-        //            ForEach(vm.locations){ item in
-        //                Text(item.name)
-        //            }
-        //        }
+        
         if(vm.locations.isEmpty){
             ProgressView()
         }
@@ -44,15 +29,25 @@ struct LocationsView: View {
         else{
             ZStack{
                 Map(position: $cameraPosition){
-                    ForEach(vm.locations){
-                        Marker($0.name, coordinate: $0.coordinates)
+                    ForEach(vm.locations){ item in
+                        Marker(item.name, coordinate: item.coordinates)
                     }
                 }
+            }.onAppear(){
+                locationManager.checkLocationAuthorization()
+                
+                centerVar = locationManager.lastKnownLocation ?? CLLocationCoordinate2D(latitude:41.8902, longitude: 12.4922)
+                
+                cameraPosition = MapCameraPosition.region(MKCoordinateRegion(
+                    center: centerVar,
+                    span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
+                ))
             }
         }
-        
     }
+    
 }
+
 
 #Preview {
     LocationsView()
